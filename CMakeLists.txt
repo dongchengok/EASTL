@@ -52,3 +52,10 @@ endif()
 
 target_link_libraries(EASTL EABase)
 
+if(BUILD_SHARED_LIBS)
+  target_compile_definitions(EASTL PUBLIC EA_DLL)
+  if(MSVC OR CYGWIN)
+    target_compile_definitions(EASTL PRIVATE "EASTL_API=__declspec(dllexport)")
+  endif()
+endif()
+
