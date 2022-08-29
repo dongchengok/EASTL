@@ -20,7 +20,7 @@ include(CommonCppFlags)
 # Library definition
 #-------------------------------------------------------------------------------------------
 file(GLOB EASTL_SOURCES "source/*.cpp")
-add_library(EASTL ${EASTL_SOURCES})
+add_library(EASTL STATIC ${EASTL_SOURCES})
 
 if(EASTL_BUILD_BENCHMARK)
     add_subdirectory(benchmark)
@@ -52,10 +52,16 @@ endif()
 
 target_link_libraries(EASTL EABase)
 
-if(BUILD_SHARED_LIBS)
-  target_compile_definitions(EASTL PUBLIC EA_DLL)
-  if(MSVC OR CYGWIN)
-    target_compile_definitions(EASTL PRIVATE "EASTL_API=__declspec(dllexport)")
-  endif()
-endif()
+# if(BUILD_SHARED_LIBS)
+#   target_compile_definitions(EASTL PUBLIC EA_DLL)
+#   if(MSVC OR CYGWIN)
+#     target_compile_definitions(EASTL PRIVATE "EASTL_API=__declspec(dllexport)")
+#   endif()
+# endif()
 
+# 接入EASTL的VS调试模板
+# https://eastl.docsforge.com/#projects-and-products-using-eastl
+add_custom_target(NatVis SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/doc/EASTL.natvis)
+
+set_target_properties(EASTL  PROPERTIES FOLDER ${JOKER_NAME_3RD})
+set_target_properties(NatVis  PROPERTIES FOLDER ${JOKER_NAME_3RD})
